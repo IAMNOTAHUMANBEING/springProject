@@ -2,7 +2,7 @@ package com.example.testpjt.common.exception.handler;
 
 import com.example.testpjt.common.exception.errorcode.CommonErrorCode;
 import com.example.testpjt.common.exception.errorcode.ErrorCode;
-import com.example.testpjt.common.exception.exception.urlNotFoundException;
+import com.example.testpjt.common.exception.exception.urlDataNotFoundException;
 import com.example.testpjt.common.exception.response.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +26,26 @@ public class testpjtExceptionHandler extends ResponseEntityExceptionHandler {
 
         final ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
 
-        return handleExceptionInternal(e, errorCode, null, errorCode.getHttpStatus(), request);
+        return handleExceptionInternal(e, errorCode, new HttpHeaders(), errorCode.getHttpStatus(), request);
     }
 
-    @ExceptionHandler(value = urlNotFoundException.class)
-    public ResponseEntity<Object> handleUrlNotFoundException(urlNotFoundException e, WebRequest request) {
+    @ExceptionHandler(value = urlDataNotFoundException.class)
+    public ResponseEntity<Object> handleUrlNotFoundException(urlDataNotFoundException e, WebRequest request) {
+
+        LOGGER.warn("[handleUrlNotFoundException] : {}", e.getMessage());
+
         final ErrorCode errorCode = CommonErrorCode.RESOURCE_NOT_FOUND;
-        return handleExceptionInternal(e, errorCode, null, errorCode.getHttpStatus(),request);
+
+        return handleExceptionInternal(e, errorCode, new HttpHeaders(), errorCode.getHttpStatus(), request);
     }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
-        ErrorResponse errorResponse = makeErrorResponse((ErrorCode) body);
+         // 다른 핸들러 메서드에서 handleExceptionInternal를 호출하며 body로 null값을 주기 때문에 에러가 남
+         // 어디서 쓰고 있는지도 모르는 함수를 오버라이딩 하는게 맞나
+         // 차라리 오버로딩해서 내가 핸들러하고 있는 예외에만 적용하는게 맞는 거 같은데
+         ErrorResponse errorResponse = makeErrorResponse((ErrorCode) body);
+
         return super.handleExceptionInternal(ex, errorResponse, headers, statusCode, request);
     }
 

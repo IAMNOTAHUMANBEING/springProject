@@ -1,5 +1,6 @@
 package com.example.testpjt.data.dao.impl;
 
+import com.example.testpjt.common.exception.exception.urlDataNotFoundException;
 import com.example.testpjt.data.dao.ShortUrlDAO;
 import com.example.testpjt.data.entity.ShortUrlEntity;
 import com.example.testpjt.data.repository.ShortUrlRedisRepository;
@@ -36,12 +37,20 @@ public class ShortUrlDAOImpl implements ShortUrlDAO {
     public void deleteByShortUrl(String shortUrl){
         // 삭제할 값이 없는 경우 여기서 Null Entity 반환받게 됨
         ShortUrlEntity foundshortUrlEntity = shortUrlRepository.findByUrl(shortUrl);
+        if (foundshortUrlEntity == null){
+            throw new urlDataNotFoundException(shortUrl);
+        }
         shortUrlRepository.delete(foundshortUrlEntity);
     }
 
     @Override
     public void deleteByOriginalUrl(String originalUrl){
         ShortUrlEntity foundshortUrlEntity = shortUrlRepository.findByOrgUrl(originalUrl);
+        if (foundshortUrlEntity == null){
+            throw new urlDataNotFoundException(originalUrl);
+        }
         shortUrlRepository.delete(foundshortUrlEntity);
     }
 }
+
+//throw new urlDataNotFoundException(e);

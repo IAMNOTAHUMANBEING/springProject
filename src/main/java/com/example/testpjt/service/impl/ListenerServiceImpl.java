@@ -16,6 +16,7 @@ public class ListenerServiceImpl implements ListenerService {
         this.listenerRepository = listenerRepository;
     }
 
+    // findById는 repository에서 추상메서드를 선언한게 아니므로 반환값 Optional이라서 get() 필요 
     @Override
     public ListenerEntity getEntity(Long id) { return listenerRepository.findById(id).get();}
 

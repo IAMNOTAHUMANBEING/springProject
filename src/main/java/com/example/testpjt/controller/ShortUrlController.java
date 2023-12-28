@@ -1,6 +1,7 @@
 package com.example.testpjt.controller;
 
 
+import com.example.testpjt.common.exception.exception.urlDataNotFoundException;
 import com.example.testpjt.data.dto.ShortUrlResponseDto;
 import com.example.testpjt.service.ShortUrlService;
 import org.checkerframework.checker.units.qual.C;
@@ -48,13 +49,7 @@ public class ShortUrlController {
     @DeleteMapping("/")
     public ResponseEntity<String> deleteShortUrl(String url){
 
-        try{
-            shortUrlService.deleteShortUrl(url);
-        }catch (RuntimeException e){
-            // 삭제할 값이 없는 경우 DB에서 Null Entity 반환받고 repository delete에 파라미터로 넘기면 예외발생
-            LOGGER.info(e.toString());
-        }
-
+        shortUrlService.deleteShortUrl(url);
         return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다");
     }
 
