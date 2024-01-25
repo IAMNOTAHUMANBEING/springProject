@@ -23,7 +23,7 @@ public class testpjtExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAllException(Exception e, WebRequest request) {
 
         LOGGER.warn("[handleAllException] : ", e);
-
+        // 에러 코드를 커스텀 예외 클래스의 변수로 넣는 방법도 가능 어떤게 좋을까
         final ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
 
         return handleExceptionInternal(e, errorCode, new HttpHeaders(), errorCode.getHttpStatus(), request);
